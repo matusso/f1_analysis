@@ -67,3 +67,4 @@ plt.suptitle(f"Fastest Lap Comparison \n "
              f"{quali.weekend.name} {quali.weekend.year} Qualifying")
 
 plt.show()
+fig.savefig('fastest_lap_compare_ver_ham.png')
