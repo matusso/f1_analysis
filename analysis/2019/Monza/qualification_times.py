@@ -8,7 +8,7 @@ import fastf1.plotting
 from fastf1.core import Laps
 
 
-fastf1.Cache.enable_cache('../../cache')  # replace with your cache directory
+fastf1.Cache.enable_cache('f1cache')  # replace with your cache directory
 
 # we only want support for timedelta plotting in this example
 fastf1.plotting.setup_mpl(mpl_timedelta_support=True, color_scheme=None, misc_mpl_mods=False)
@@ -53,3 +53,4 @@ plt.suptitle(f"{quali.weekend.name} {quali.weekend.year} Qualifying\n"
              f"Fastest Lap: {lap_time_string} ({pole_lap['Driver']})")
 
 plt.show()
+fig.savefig('qualification_times.png')
