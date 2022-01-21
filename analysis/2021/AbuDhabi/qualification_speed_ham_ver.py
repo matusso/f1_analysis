@@ -56,8 +56,6 @@ twin.plot(ref_tel['Distance'], delta_time, '--', color='white')
 twin.set_ylabel("<-- Ver ahead | Ham ahead -->")
 
 
-fig.tight_layout()
-
 
 #ax.set_xlabel('Distance in m')
 #ax.set_ylabel('Speed in km/h')
@@ -67,4 +65,4 @@ plt.suptitle(f"Fastest Lap Comparison \n "
              f"{quali.weekend.name} {quali.weekend.year} Qualifying")
 
 plt.show()
-fig.savefig('fastest_lap_compare_ver_ham.png')
+fig.savefig('fastest_lap_tel.png', dpi=fig.dpi, bbox_inches='tight')
