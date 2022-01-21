@@ -6,7 +6,7 @@ from fastf1 import plotting
 
 plotting.setup_mpl()
 
-ff1.Cache.enable_cache('../../cache')
+ff1.Cache.enable_cache('f1cache')
 monza_quali = ff1.get_session(2019, 'Monza', 'Q')
 
 laps = monza_quali.load_laps(with_telemetry=True)
@@ -30,7 +30,7 @@ vCarLecBrake = lec_car_data['Brake']
 vCarHamBrake = ham_car_data['Brake']
 
 # The rest is just plotting
-fig, ax = plt.subplots()
+fig_a, ax = plt.subplots()
 ax.plot(t_lec, vCarLec, label='Lec')
 ax.plot(t_ham, vCarHam, label='Ham')
 
@@ -38,7 +38,7 @@ ax.set_xlabel('Time')
 ax.set_ylabel('Speed [Km/h]')   
 ax.set_title('Speed')
 
-fig, bx = plt.subplots()
+fig_b, bx = plt.subplots()
 bx.plot(t_lec, vCarLecThrottle, label='Lec')
 bx.plot(t_ham, vCarHamThrottle, label='Ham')
 
@@ -46,7 +46,7 @@ bx.set_xlabel('Time')
 bx.set_ylabel('Throttle')   
 bx.set_title('Throttle')
 
-fig, cx = plt.subplots()
+fig_c, cx = plt.subplots()
 cx.plot(t_lec, vCarLecBrake, label='Lec')
 cx.plot(t_ham, vCarHamBrake, label='Ham')
 
@@ -59,3 +59,6 @@ bx.legend()
 cx.legend()
 
 plt.show()
+fig_a.savefig('speed.png')
+fig_b.savefig('throttle.png')
+fig_c.savefig('brake.png')
