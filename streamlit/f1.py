@@ -5,6 +5,8 @@ import fastf1.plotting
 import pandas as pd
 from fastf1 import plotting, utils
 import sys
+from results import qualification_results
+from race import race_lap_telemetry
 
 fastf1.Cache.enable_cache('/tmp')  # replace with your cache directory
 
@@ -105,12 +107,14 @@ if __name__ == '__main__':
         )
 
     st.header(str(selectedYear) + "/" + circuitName)
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Practice 1", "Practice 2", "Practice 3", "Qualifying", "Race"])
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Practice 1", "Practice 2", "Practice 3", "Qualifying", "Race", "Results"])
 
     with tab4:
         draw_chart(fastf1.get_session(selectedYear, circuitName, 'Q'))
 
-#with tab5:
-        #race_results(fastf1.get_session(selectedYear, circuitName, 'R'))
+    with tab5:
+        race_lap_telemetry(fastf1.get_session(selectedYear, circuitName, 'R'))
 
+    with tab6:
+        qualification_results(fastf1.get_session(selectedYear, circuitName, 'Q'))
     
