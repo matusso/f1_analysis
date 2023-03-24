@@ -90,7 +90,7 @@ if __name__ == '__main__':
 
     selectedYear = st.sidebar.selectbox(
         "Choose year",
-        (2018, 2019, 2020, 2021, 2022, 2023)
+        (2019, 2020, 2021, 2022, 2023)
     )
 
     schedule = fastf1.get_event_schedule(selectedYear)
