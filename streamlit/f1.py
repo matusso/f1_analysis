@@ -4,6 +4,7 @@ import pandas as pd
 from fastf1 import plotting, utils
 from results import qualification_results
 from race import race_lap_telemetry
+from stats import get_stats
 
 fastf1.Cache.enable_cache('/tmp')  # replace with your cache directory
 
@@ -36,11 +37,14 @@ if __name__ == '__main__':
         )
 
     st.header(str(selectedYear) + "/" + circuitName)
-    tab1, tab2 = st.tabs(["Telemetry", "Results"])
+    tab1, tab2, tab3 = st.tabs(["Telemetry", "Stats", "Results"])
 
     with tab1:
         race_lap_telemetry(fastf1.get_session(selectedYear, circuitName, session))
 
     with tab2:
+        get_stats(fastf1.get_session(selectedYear, circuitName, session))
+
+    with tab3:
         qualification_results(fastf1.get_session(selectedYear, circuitName, 'Q'))
     

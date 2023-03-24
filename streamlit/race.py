@@ -1,6 +1,8 @@
 import fastf1
 import streamlit as st
 import matplotlib.pyplot as plt
+import pandas as pd
+import datetime
 
 
 def get_info(laps, lapNumber, driverAbbreviation):
@@ -28,7 +30,6 @@ def load_telemetry(lapOne, lapTwo, driver_dict, driverOne, driverTwo, telX, telY
 def race_lap_telemetry(session):
     session.load(laps=True, weather=True, telemetry=True)
     laps = session.laps
-    lapNumberOne = None
     driver_dict = {}
 
     for d in session.drivers:
@@ -54,9 +55,14 @@ def race_lap_telemetry(session):
         lapOne = get_info(laps, lapNumber=lapNumberOne, driverAbbreviation=driver_dict[driverOne][0])
         weatherOne = lapOne.get_weather_data()
         m1, m2, m3 = st.columns(3)
-        m1.metric("AirTemp", weatherOne['AirTemp'])
-        m2.metric("TrackTemp", weatherOne['TrackTemp'])
-        m3.metric("WindSpeed", weatherOne['WindSpeed'])
+    
+        sec1 = pd.to_timedelta(lapOne['Sector1Time']).total_seconds() 
+        sec2 = pd.to_timedelta(lapOne['Sector2Time']).total_seconds() 
+        sec3 = pd.to_timedelta(lapOne['Sector2Time']).total_seconds() 
+
+        m1.metric("Sector 1", str(sec1))
+        m2.metric("Sector 2", str(sec2))
+        m3.metric("Sector 3", str(sec3))
 
     with col2:
         driverTwo = st.selectbox('Select driver #2', driver_dict.keys())
@@ -75,9 +81,18 @@ def race_lap_telemetry(session):
         lapTwo = get_info(laps, lapNumber=lapNumberTwo, driverAbbreviation=driver_dict[driverTwo][0])
         weatherTwo = lapTwo.get_weather_data()
         m1, m2, m3 = st.columns(3)
-        m1.metric("AirTemp", weatherTwo['AirTemp'], weatherTwo['AirTemp'] - weatherOne['AirTemp'])
-        m2.metric("TrackTemp", weatherTwo['TrackTemp'], weatherTwo['TrackTemp'] - weatherOne['TrackTemp'])
-        m3.metric("WindSpeed", weatherTwo['WindSpeed'], weatherTwo['WindSpeed'] - weatherOne['WindSpeed'])
+   #     m1.metric("AirTemp", weatherTwo['AirTemp'], weatherTwo['AirTemp'] - weatherOne['AirTemp'])
+    #    m2.metric("TrackTemp", weatherTwo['TrackTemp'], weatherTwo['TrackTemp'] - weatherOne['TrackTemp'])
+    #    m3.metric("WindSpeed", weatherTwo['WindSpeed'], weatherTwo['WindSpeed'] - weatherOne['WindSpeed'])
+
+        secT1 = pd.to_timedelta(lapTwo['Sector1Time']).total_seconds() 
+        secT2 = pd.to_timedelta(lapTwo['Sector2Time']).total_seconds() 
+        secT3 = pd.to_timedelta(lapTwo['Sector2Time']).total_seconds() 
+
+        m1.metric("Sector 1", str(sec1), str(round(secT1 - sec1, 3)), delta_color="inverse")
+        m2.metric("Sector 2", str(sec2), str(round(secT2 - sec2, 3)), delta_color="inverse")
+        m3.metric("Sector 3", str(sec3), str(round(secT3 - sec3, 3)), delta_color="inverse")
+
         
 
     st.header("Speed")
@@ -103,3 +118,5 @@ def race_lap_telemetry(session):
     st.header("DRS")
     fig = load_telemetry(lapOne=lapOne, lapTwo=lapTwo, telX="Distance", telY="DRS", lblX="Distance in m", lblY="DRS", driver_dict=driver_dict, driverOne=driverOne, driverTwo=driverTwo)
     st.plotly_chart(fig, use_container_width=True)
+
+    
