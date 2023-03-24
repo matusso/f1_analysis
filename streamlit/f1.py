@@ -8,14 +8,13 @@ import fastf1.plotting
 from fastf1 import plotting
 from fastf1 import utils
 
-#fastf1.Cache.enable_cache('./cache')  # replace with your cache directory
+fastf1.Cache.enable_cache('/tmp')  # replace with your cache directory
 
 # enable some matplotlib patches for plotting timedelta values and load
 # FastF1's default color scheme
 fastf1.plotting.setup_mpl()
 
 
-@st.cache_data
 def load_q(session, telX, telY, lblX, lblY, dD, dO, dT):
     driver_dict = dD
     driverOne = dO
