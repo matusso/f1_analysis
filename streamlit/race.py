@@ -61,7 +61,7 @@ def race_lap_telemetry(session):
     with col2:
         driverTwo = st.selectbox('Select driver #2', driver_dict.keys())
         numLaps = len(laps.pick_driver(driver_dict[driverTwo][0]))
-        bestLapNumberTwo = int(laps.pick_driver(driver_dict[driverOne][0]).pick_fastest()['LapNumber'])
+        bestLapNumberTwo = int(laps.pick_driver(driver_dict[driverTwo][0]).pick_fastest()['LapNumber'])
         
         bestLapCheckboxTwo = st.checkbox('Best Lap', key='bestlap2checkbox')
         

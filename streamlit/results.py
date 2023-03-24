@@ -18,7 +18,6 @@ def qualification_results(session):
     fastest_laps['LapTimeDelta'] = fastest_laps['LapTime'] - pole_lap['LapTime']
     #print(fastest_laps)
 
-
     fastest_laps['LapTime'] = pd.to_timedelta(fastest_laps['LapTime']).apply(lambda x: str(x))
     fastest_laps['LapTimeDelta'] = pd.to_timedelta(fastest_laps['LapTimeDelta']).apply(lambda x: str(x))
 
