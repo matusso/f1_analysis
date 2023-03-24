@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import fastf1.plotting
 from fastf1 import plotting
 from fastf1 import utils
-import plotly.figure_factory as ff
 
 fastf1.Cache.enable_cache('./cache')  # replace with your cache directory
 
