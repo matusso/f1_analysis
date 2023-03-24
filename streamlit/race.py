@@ -19,8 +19,7 @@ def load_telemetry(lapOne, lapTwo, driver_dict, driverOne, driverTwo, telX, telY
     ax.plot(tel1[telX], tel1[telY], color='#'+driver_dict[driverOne][1], label=driver_dict[driverOne][0])
     ax.plot(tel2[telX], tel2[telY], color='#'+driver_dict[driverTwo][1], label=driver_dict[driverTwo][0])
 
-    #ax.set_xlabel('Distance in m')
-    #ax.set_ylabel('Speed in km/h')
+
     ax.set_xlabel(lblX)
     ax.set_ylabel(lblY)
 
@@ -29,36 +28,57 @@ def load_telemetry(lapOne, lapTwo, driver_dict, driverOne, driverTwo, telX, telY
 def race_lap_telemetry(session):
     session.load(laps=True, weather=True, telemetry=True)
     laps = session.laps
-
+    lapNumberOne = None
     driver_dict = {}
 
     for d in session.drivers:
         driver = session.get_driver(d)
-        #print(driver)
         driver_dict[driver['FullName']] = [driver['Abbreviation'], driver['TeamColor']]
 
     col1, col2 = st.columns(2)
     with col1:
         driverOne = st.selectbox('Select driver #1', driver_dict.keys())
-        lapNumberOne = st.slider('Lap #1', 1, 54, 25)
+
+        numLaps = len(laps.pick_driver(driver_dict[driverOne][0]))
+        bestLapNumberOne = int(laps.pick_driver(driver_dict[driverOne][0]).pick_fastest()['LapNumber'])
+        bestLapCheckboxOne = st.checkbox('Best Lap', key='bestlap1checkbox')
+
+        defaultLap = 1
+        disabled = False
+        if bestLapCheckboxOne == True:
+            defaultLap = bestLapNumberOne
+            disabled = True
+       
+        lapNumberOne = st.slider('Lap', 1, numLaps, defaultLap, key='lap#1', disabled=disabled)
+
         lapOne = get_info(laps, lapNumber=lapNumberOne, driverAbbreviation=driver_dict[driverOne][0])
         weatherOne = lapOne.get_weather_data()
         m1, m2, m3 = st.columns(3)
         m1.metric("AirTemp", weatherOne['AirTemp'])
         m2.metric("TrackTemp", weatherOne['TrackTemp'])
         m3.metric("WindSpeed", weatherOne['WindSpeed'])
-        print(weatherOne)
 
     with col2:
         driverTwo = st.selectbox('Select driver #2', driver_dict.keys())
-        lapNumberTwo = st.slider('Lap #2', 1, 54, 25)
+        numLaps = len(laps.pick_driver(driver_dict[driverTwo][0]))
+        bestLapNumberTwo = int(laps.pick_driver(driver_dict[driverOne][0]).pick_fastest()['LapNumber'])
+        
+        bestLapCheckboxTwo = st.checkbox('Best Lap', key='bestlap2checkbox')
+        
+        defaultLap = 1
+        disabled = False
+        if bestLapCheckboxTwo == True:
+            defaultLap = bestLapNumberTwo
+            disabled = True
+        
+        lapNumberTwo = st.slider('Lap', 1, numLaps, defaultLap, key='lap#2', disabled=disabled)  
         lapTwo = get_info(laps, lapNumber=lapNumberTwo, driverAbbreviation=driver_dict[driverTwo][0])
         weatherTwo = lapTwo.get_weather_data()
         m1, m2, m3 = st.columns(3)
         m1.metric("AirTemp", weatherTwo['AirTemp'], weatherTwo['AirTemp'] - weatherOne['AirTemp'])
         m2.metric("TrackTemp", weatherTwo['TrackTemp'], weatherTwo['TrackTemp'] - weatherOne['TrackTemp'])
         m3.metric("WindSpeed", weatherTwo['WindSpeed'], weatherTwo['WindSpeed'] - weatherOne['WindSpeed'])
-        print(lapTwo)
+        
 
     st.header("Speed")
     fig = load_telemetry(lapOne=lapOne, lapTwo=lapTwo, telX="Distance", telY="Speed", lblX="Distance in m", lblY="Speed in km/h", driver_dict=driver_dict, driverOne=driverOne, driverTwo=driverTwo)
