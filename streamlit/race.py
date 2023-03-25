@@ -89,9 +89,9 @@ def race_lap_telemetry(session):
         secT2 = pd.to_timedelta(lapTwo['Sector2Time']).total_seconds() 
         secT3 = pd.to_timedelta(lapTwo['Sector2Time']).total_seconds() 
 
-        m1.metric("Sector 1", str(sec1), str(round(secT1 - sec1, 3)), delta_color="inverse")
-        m2.metric("Sector 2", str(sec2), str(round(secT2 - sec2, 3)), delta_color="inverse")
-        m3.metric("Sector 3", str(sec3), str(round(secT3 - sec3, 3)), delta_color="inverse")
+        m1.metric("Sector 1", str(secT1), str(round(secT1 - sec1, 3)), delta_color="inverse")
+        m2.metric("Sector 2", str(secT2), str(round(secT2 - sec2, 3)), delta_color="inverse")
+        m3.metric("Sector 3", str(secT3), str(round(secT3 - sec3, 3)), delta_color="inverse")
 
         
 
