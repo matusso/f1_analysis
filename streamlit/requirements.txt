@@ -42,7 +42,7 @@ pytz-deprecation-shim==0.1.0.post0
 requests==2.31.0
 requests-cache==1.0.0
 rich==13.3.2
-scipy==1.10.1
+scipy==1.10.0
 semver==2.13.0
 signalr-client-aio==0.0.1.6.2
 six==1.16.0
