@@ -13,7 +13,7 @@ Pillow==10.3.0
 pyparsing==3.0.7
 python-dateutil==2.8.2
 pytz==2021.3
-requests==2.32.0
+requests==2.32.4
 requests-cache==0.5.2
 scipy==1.10.0
 signalr-client-aio==0.0.1.6.2
