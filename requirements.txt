@@ -20,5 +20,5 @@ signalr-client-aio==0.0.1.6.2
 six==1.16.0
 thefuzz==0.19.0
 timple==0.1.5
-urllib3==1.26.19
+urllib3==2.6.0
 websockets==10.1
