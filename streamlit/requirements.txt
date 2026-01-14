@@ -58,7 +58,7 @@ typing_extensions==4.5.0
 tzdata==2022.7
 tzlocal==4.3
 url-normalize==1.4.3
-urllib3==2.6.0
+urllib3==2.6.3
 validators==0.20.0
 websockets==10.4
 zipp==3.19.1
