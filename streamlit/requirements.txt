@@ -32,7 +32,7 @@ plotly==5.13.1
 protobuf==5.29.6
 pyarrow==14.0.1
 pydeck==0.8.0
-Pygments==2.15.0
+Pygments==2.20.0
 Pympler==1.0.1
 pyparsing==3.0.9
 pyrsistent==0.19.3
