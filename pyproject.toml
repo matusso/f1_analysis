@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "f1-analysis"
+version = "1.0.0"
+description = "Formula 1 telemetry analysis and comparison, delivered as a Streamlit application."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Matúš Bursa" }]
+keywords = ["formula1", "f1", "telemetry", "fastf1", "streamlit", "motorsport"]
+
+# Runtime dependencies. Upper bounds follow FastF1 3.8's own constraints
+# (notably pandas<3.0) so the resolved set is guaranteed compatible.
+dependencies = [
+    "fastf1>=3.8,<4.0",
+    "streamlit>=1.60,<2.0",
+    "plotly>=6.0,<7.0",
+    "pandas>=2.2,<3.0",
+    "numpy>=2.0,<3.0",
+    "matplotlib>=3.8,<4.0",
+    "pydantic>=2.6,<3.0",
+    "pydantic-settings>=2.2,<3.0",
+]
+
+[project.optional-dependencies]
+# Feature extras: shipped to end users, installable via `pip install "...[grafana]"`.
+# Future integrations (see src/f1_analysis/exporters). Kept optional so the core
+# app stays lean until an exporter backend is actually wired up.
+grafana = [
+    "requests>=2.30,<3.0",
+]
+
+# Development tooling lives in a PEP 735 dependency group rather than an extra:
+# uv installs the `dev` group by default with `uv sync`, and it never leaks into
+# the published package's optional dependencies.
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+]
+
+[project.scripts]
+f1-analysis = "f1_analysis.app.cli:main"
+
+[project.urls]
+Repository = "https://github.com/matusso/f1_analysis"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.10"
+packages = ["f1_analysis"]
+ignore_missing_imports = true
+
+# NumPy's bundled stubs use 3.12-only `type` syntax, which trips mypy when the
+# target is 3.10. We don't type-check third-party internals anyway.
+[[tool.mypy.overrides]]
+module = ["numpy.*"]
+follow_imports = "skip"
+follow_imports_for_stubs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
