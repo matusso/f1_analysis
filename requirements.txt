@@ -84,7 +84,7 @@ matplotlib==3.11.1 ; python_full_version >= '3.11'
     #   f1-analysis
     #   fastf1
     #   timple
-msgpack==1.1.2
+msgpack==1.2.1
     # via signalrcore
 narwhals==2.24.0
     # via
