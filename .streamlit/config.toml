@@ -4,5 +4,12 @@ headless = true
 [browser]
 gatherUsageStats = false
 
+# Pit-wall inspired dark theme. Fine-grained styling (fonts, table heat colours,
+# status bar) is applied at runtime in src/f1_analysis/app/theme.py.
 [theme]
 base = "dark"
+primaryColor = "#00e5ff"
+backgroundColor = "#0a0a0a"
+secondaryBackgroundColor = "#12151a"
+textColor = "#e8e8e8"
+font = "monospace"

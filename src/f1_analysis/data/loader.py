@@ -57,7 +57,7 @@ def load_session(
     return session
 
 
-def _normalise_hex(color: str | None) -> str:
+def normalise_hex(color: str | None) -> str:
     """Return a ``#RRGGBB`` string; fall back to white for missing colours."""
     if not color:
         return "#FFFFFF"
@@ -74,7 +74,7 @@ def build_driver_index(session: Session) -> dict[str, DriverRef]:
             full_name=info["FullName"],
             abbreviation=info["Abbreviation"],
             team_name=info.get("TeamName", ""),
-            team_color=_normalise_hex(info.get("TeamColor")),
+            team_color=normalise_hex(info.get("TeamColor")),
         )
         index[ref.full_name] = ref
     return index
