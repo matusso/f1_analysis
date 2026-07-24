@@ -93,7 +93,7 @@ h2, h3 {{
     margin-bottom: 1.1rem;
     align-items: stretch;
 }}
-.st-key-pw-controls [data-testid="stColumn"]:nth-child(-n+3) {{
+.st-key-pw-controls [data-testid="stColumn"]:nth-child(-n+4) {{
     border-right: 1px solid var(--pw-border);
 }}
 .st-key-pw-controls [data-testid="stColumn"] {{ padding: 0.4rem 0.85rem; }}
