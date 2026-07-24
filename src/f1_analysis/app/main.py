@@ -13,12 +13,12 @@ from __future__ import annotations
 import streamlit as st
 
 from f1_analysis.app.theme import inject_css, render_badge
-from f1_analysis.app.views import render_results, render_stats, render_telemetry
+from f1_analysis.app.views import render_results, render_telemetry
 from f1_analysis.config import get_settings
 from f1_analysis.data import list_event_locations, load_session
 
 _SESSIONS = ("Practice 1", "Practice 2", "Practice 3", "Qualifying", "Race")
-_DASHBOARDS = ("Telemetry", "Stats", "Results")
+_DASHBOARDS = ("Telemetry", "Results")
 
 
 def _control_bar() -> tuple[int, str, str, str]:
@@ -57,12 +57,11 @@ def main() -> None:
     year, circuit, session_name, dashboard = _control_bar()
 
     # Only the selected dashboard's session is loaded.
+    session = load_session(year, circuit, session_name)
     if dashboard == "Telemetry":
-        render_telemetry(load_session(year, circuit, session_name))
-    elif dashboard == "Stats":
-        render_stats(load_session(year, circuit, session_name))
-    else:  # Results — always the qualifying classification
-        render_results(load_session(year, circuit, "Q"))
+        render_telemetry(session)
+    else:  # Results — classification for the chosen session
+        render_results(session)
 
 
 if __name__ == "__main__":

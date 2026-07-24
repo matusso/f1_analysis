@@ -5,9 +5,10 @@ from __future__ import annotations
 import streamlit as st
 from fastf1.core import Session
 
+from f1_analysis.app.theme import render_lap_summary
 from f1_analysis.app.widgets import driver_lap_selector
 from f1_analysis.data import build_driver_index
-from f1_analysis.data.loader import lap_sectors
+from f1_analysis.data.loader import lap_sectors, lap_summary
 from f1_analysis.data.models import DriverRef, LapSectors
 from f1_analysis.viz import TELEMETRY_CHANNELS, compare_channel
 
@@ -35,6 +36,7 @@ def render_telemetry(session: Session) -> None:
         driver_one, lap_one = driver_lap_selector(
             laps, driver_index, label="Select driver #1", key_prefix="tel1"
         )
+        render_lap_summary(driver_one, lap_summary(lap_one))
         sectors_one = lap_sectors(lap_one)
         _render_sectors(sectors_one)
 
@@ -42,6 +44,7 @@ def render_telemetry(session: Session) -> None:
         driver_two, lap_two = driver_lap_selector(
             laps, driver_index, label="Select driver #2", key_prefix="tel2"
         )
+        render_lap_summary(driver_two, lap_summary(lap_two))
         _render_sectors(lap_sectors(lap_two), reference=sectors_one)
 
     for channel in TELEMETRY_CHANNELS:

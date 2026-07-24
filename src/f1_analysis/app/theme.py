@@ -11,7 +11,17 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
+from f1_analysis.data.models import DriverRef, LapSummary
 from f1_analysis.viz import style as S
+
+# Modern F1 tyre-compound colours.
+_COMPOUND_COLORS = {
+    "SOFT": "#ff2d55",
+    "MEDIUM": "#ffd400",
+    "HARD": "#f0f0f0",
+    "INTERMEDIATE": "#00e676",
+    "WET": "#00a3ff",
+}
 
 # ---------------------------------------------------------------------------
 # Global CSS
@@ -186,6 +196,41 @@ h2, h3 {{
     border: 1px solid var(--pw-green);
 }}
 
+/* ---- Lap summary card (telemetry) -------------------------------------- */
+.pw-lap {{
+    border: 1px solid var(--pw-border); background: var(--pw-surface);
+    border-left-width: 4px; border-radius: 4px;
+    padding: 0.6rem 0.9rem; margin-bottom: 0.7rem;
+}}
+.pw-lap-head {{ display: flex; align-items: baseline; gap: 0.6rem; }}
+.pw-lap .drv {{ font-size: 1.25rem; font-weight: 700; letter-spacing: 0.04em; }}
+.pw-lap .name {{ font-size: 0.72rem; color: var(--pw-muted); text-transform: uppercase; }}
+.pw-lap .laptime {{
+    margin-left: auto; font-size: 1.55rem; font-weight: 700;
+    color: var(--pw-text); letter-spacing: 0.02em;
+}}
+.pw-lap .laptime.pb {{ color: var(--pw-purple); }}
+.pw-lap-stats {{
+    display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.55rem;
+}}
+.pw-chip {{
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: var(--pw-surface-alt); border: 1px solid var(--pw-border);
+    border-radius: 3px; padding: 0.2rem 0.55rem;
+    font-size: 0.78rem; color: var(--pw-text);
+}}
+.pw-chip .k {{ color: var(--pw-muted); font-size: 0.62rem; letter-spacing: 0.1em; }}
+.pw-tyre {{
+    width: 1.15rem; height: 1.15rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.62rem; font-weight: 700; color: #0a0a0a;
+    border: 2px solid rgba(255,255,255,0.25);
+}}
+.pw-chip.pb {{
+    background: rgba(177,59,255,0.16); border-color: var(--pw-purple);
+    color: var(--pw-purple); font-weight: 700; letter-spacing: 0.08em;
+}}
+
 /* ---- Timing table ------------------------------------------------------ */
 .pw-timing {{ border-collapse: collapse; width: 100%; font-family: {S.MONO_STACK}; }}
 .pw-timing th {{
@@ -215,6 +260,50 @@ def inject_css() -> None:
 def render_badge(text: str) -> None:
     """Render the status badge shown at the right of the control bar."""
     st.markdown(f'<div class="pw-badge">{text}</div>', unsafe_allow_html=True)
+
+
+def _format_laptime(seconds: float | None) -> str:
+    if seconds is None:
+        return "—:——.———"
+    minutes, secs = divmod(seconds, 60)
+    return f"{int(minutes)}:{secs:06.3f}"
+
+
+def render_lap_summary(driver: DriverRef, summary: LapSummary) -> None:
+    """Render a modern-F1 lap header card: driver, lap time, tyre, speed trap."""
+    laptime_cls = "laptime pb" if summary.is_personal_best else "laptime"
+    chips: list[str] = []
+
+    if summary.compound:
+        code = summary.compound[:1].upper()
+        color = _COMPOUND_COLORS.get(summary.compound.upper(), S.MUTED)
+        age = f"{summary.tyre_life} lap" + ("s" if (summary.tyre_life or 0) != 1 else "")
+        life = age if summary.tyre_life is not None else summary.compound.title()
+        chips.append(
+            f'<span class="pw-chip"><span class="pw-tyre" '
+            f'style="background:{color}">{code}</span>{life}</span>'
+        )
+    if summary.speed_trap is not None:
+        chips.append(
+            f'<span class="pw-chip"><span class="k">ST</span>'
+            f"{summary.speed_trap:.0f} km/h</span>"
+        )
+    if summary.stint is not None:
+        chips.append(f'<span class="pw-chip"><span class="k">STINT</span>{summary.stint}</span>')
+    if summary.is_personal_best:
+        chips.append('<span class="pw-chip pb">PERS. BEST</span>')
+
+    html = (
+        f'<div class="pw-lap" style="border-left-color:{driver.team_color}">'
+        f'<div class="pw-lap-head">'
+        f'<span class="drv" style="color:{driver.team_color}">{driver.abbreviation}</span>'
+        f'<span class="name">{driver.full_name}</span>'
+        f'<span class="{laptime_cls}">{_format_laptime(summary.lap_time)}</span>'
+        f"</div>"
+        f'<div class="pw-lap-stats">{"".join(chips)}</div>'
+        f"</div>"
+    )
+    st.markdown(html, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------------------------
