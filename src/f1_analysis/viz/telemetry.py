@@ -13,6 +13,7 @@ import plotly.graph_objects as go
 from fastf1.core import Lap
 
 from f1_analysis.data.models import DriverRef
+from f1_analysis.viz.style import pitwall_layout
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,7 +61,7 @@ def compare_channel(
             x=tel_one["Distance"],
             y=tel_one[channel.key],
             name=driver_one.abbreviation,
-            line={"color": color_one},
+            line={"color": color_one, "width": 2},
             mode="lines",
         )
     )
@@ -69,16 +70,14 @@ def compare_channel(
             x=tel_two["Distance"],
             y=tel_two[channel.key],
             name=driver_two.abbreviation,
-            line={"color": color_two},
+            line={"color": color_two, "width": 2},
             mode="lines",
         )
     )
     figure.update_layout(
-        title=channel.title,
-        xaxis_title=_X_LABEL,
-        yaxis_title=channel.y_label,
-        margin={"l": 40, "r": 20, "t": 40, "b": 40},
-        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02},
-        hovermode="x unified",
+        **pitwall_layout(
+            xaxis_title=_X_LABEL,
+            yaxis_title=channel.y_label,
+        )
     )
     return figure

@@ -33,7 +33,7 @@ class Settings(BaseSettings):
         description="Directory FastF1 uses to cache downloaded session data.",
     )
     available_years: tuple[int, ...] = Field(
-        default=(2019, 2020, 2021, 2022, 2023, 2024, 2025),
+        default=(2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026),
         description="Seasons offered in the year selector.",
     )
 

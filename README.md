@@ -27,7 +27,7 @@ src/f1_analysis/
 │   ├── registry.py      # name-based registry
 │   └── grafana.py       # planned Grafana backend (scaffolded)
 └── app/                 # Streamlit presentation layer
-    ├── main.py          # entry point (sidebar + tabs)
+    ├── main.py          # entry point (top dropdown row + tabs)
     ├── cli.py           # `f1-analysis` console script
     ├── widgets.py       # shared driver/lap selector
     └── views/           # one module per tab: telemetry, stats, results
