@@ -5,7 +5,7 @@ from __future__ import annotations
 import streamlit as st
 from fastf1.core import Session
 
-from f1_analysis.app.theme import render_lap_summary
+from f1_analysis.app.theme import render_lap_summary, render_unavailable
 from f1_analysis.app.widgets import driver_lap_selector
 from f1_analysis.data import build_driver_index
 from f1_analysis.data.loader import lap_sectors, lap_summary
@@ -29,6 +29,9 @@ def _render_sectors(sectors: LapSectors, reference: LapSectors | None = None) ->
 
 def render_telemetry(session: Session) -> None:
     laps = session.laps
+    if laps.empty:
+        render_unavailable("No lap data is available for this session.")
+        return
     driver_index: dict[str, DriverRef] = build_driver_index(session)
 
     left, right = st.columns(2)

@@ -231,6 +231,18 @@ h2, h3 {{
     color: var(--pw-purple); font-weight: 700; letter-spacing: 0.08em;
 }}
 
+/* ---- Unavailable / no-data notice -------------------------------------- */
+.pw-alert {{
+    border: 1px solid var(--pw-red); border-left-width: 4px;
+    background: rgba(255,45,85,0.08); color: var(--pw-text);
+    border-radius: 4px; padding: 0.9rem 1.1rem; font-size: 0.9rem;
+}}
+.pw-alert .hd {{
+    display: block; color: var(--pw-red); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.72rem;
+    margin-bottom: 0.35rem;
+}}
+
 /* ---- Timing table ------------------------------------------------------ */
 .pw-timing {{ border-collapse: collapse; width: 100%; font-family: {S.MONO_STACK}; }}
 .pw-timing th {{
@@ -260,6 +272,14 @@ def inject_css() -> None:
 def render_badge(text: str) -> None:
     """Render the status badge shown at the right of the control bar."""
     st.markdown(f'<div class="pw-badge">{text}</div>', unsafe_allow_html=True)
+
+
+def render_unavailable(message: str) -> None:
+    """Render a styled 'data unavailable' notice in place of a dashboard."""
+    st.markdown(
+        f'<div class="pw-alert"><span class="hd">Data unavailable</span>{message}</div>',
+        unsafe_allow_html=True,
+    )
 
 
 def _format_laptime(seconds: float | None) -> str:
