@@ -13,7 +13,7 @@ import pandas as pd
 import streamlit as st
 from fastf1.core import Session
 
-from f1_analysis.app.theme import timing_table_html
+from f1_analysis.app.theme import render_unavailable, timing_table_html
 from f1_analysis.data.loader import normalise_hex
 
 _Q_COLUMNS = ("Q1", "Q2", "Q3")
@@ -84,6 +84,9 @@ def _emit(
 # --------------------------------------------------------------------------- #
 def _render_qualifying(session: Session) -> None:
     st.subheader(f"{session.name} — best sector & lap times")
+    if session.results.empty:
+        render_unavailable("No qualifying classification is available for this session.")
+        return
     results = session.results.copy().sort_values("Position").reset_index(drop=True)
 
     numeric = pd.DataFrame(index=results.index)
@@ -101,6 +104,9 @@ def _render_qualifying(session: Session) -> None:
 
 def _render_race(session: Session) -> None:
     st.subheader(f"{session.name} — classification")
+    if session.results.empty:
+        render_unavailable("No classification is available for this session yet.")
+        return
     results = session.results.copy().sort_values("Position").reset_index(drop=True)
 
     times = pd.to_timedelta(results["Time"]).dt.total_seconds()
