@@ -18,17 +18,18 @@ from f1_analysis.config import get_settings
 from f1_analysis.data import list_event_locations, load_session
 
 _SESSIONS = ("Practice 1", "Practice 2", "Practice 3", "Qualifying", "Race")
+_DASHBOARDS = ("Telemetry", "Stats", "Results")
 
 
-def _control_bar() -> tuple[int, str, str]:
+def _control_bar() -> tuple[int, str, str, str]:
     """Render the status bar — its segments are live dropdowns.
 
-    Returns the selected (year, circuit, session).
+    Returns the selected (year, circuit, session, dashboard).
     """
     settings = get_settings()
     with st.container(key="pw-controls"):
-        season_col, circuit_col, session_col, _spacer, badge_col = st.columns(
-            [1.8, 2.2, 2.4, 3.0, 1.9], vertical_alignment="center"
+        season_col, circuit_col, session_col, dashboard_col, _spacer, badge_col = st.columns(
+            [1.6, 2.0, 2.2, 2.2, 1.8, 1.9], vertical_alignment="center"
         )
         with season_col:
             year = st.selectbox("Season", settings.available_years, index=0)
@@ -36,9 +37,11 @@ def _control_bar() -> tuple[int, str, str]:
             circuit = st.selectbox("Circuit", list_event_locations(year))
         with session_col:
             session_name = st.selectbox("Session", _SESSIONS)
+        with dashboard_col:
+            dashboard = st.selectbox("Dashboard", _DASHBOARDS)
         with badge_col:
             render_badge("Data Loaded")
-    return year, circuit, session_name
+    return year, circuit, session_name, dashboard
 
 
 def main() -> None:
@@ -51,17 +54,14 @@ def main() -> None:
     )
     inject_css()
 
-    year, circuit, session_name = _control_bar()
+    year, circuit, session_name, dashboard = _control_bar()
 
-    telemetry_tab, stats_tab, results_tab = st.tabs(["Telemetry", "Stats", "Results"])
-
-    with telemetry_tab:
+    # Only the selected dashboard's session is loaded.
+    if dashboard == "Telemetry":
         render_telemetry(load_session(year, circuit, session_name))
-
-    with stats_tab:
+    elif dashboard == "Stats":
         render_stats(load_session(year, circuit, session_name))
-
-    with results_tab:
+    else:  # Results — always the qualifying classification
         render_results(load_session(year, circuit, "Q"))
 
 
