@@ -30,7 +30,7 @@ src/f1_analysis/
     ├── main.py          # entry point (status-bar dropdowns select the dashboard)
     ├── cli.py           # `f1-analysis` console script
     ├── widgets.py       # shared driver/lap selector
-    └── views/           # one module per dashboard: telemetry, stats, results
+    └── views/           # one module per dashboard: telemetry, results
 streamlit_app.py         # repo-root launcher (Streamlit Cloud convention)
 tests/                   # pytest suite
 ```

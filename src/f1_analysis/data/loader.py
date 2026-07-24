@@ -15,7 +15,7 @@ import pandas as pd
 from fastf1.core import Lap, Laps, Session
 
 from f1_analysis.config import get_settings
-from f1_analysis.data.models import DriverRef, LapSectors
+from f1_analysis.data.models import DriverRef, LapSectors, LapSummary
 
 logger = logging.getLogger(__name__)
 
@@ -110,4 +110,33 @@ def lap_sectors(lap: Lap) -> LapSectors:
         sector1=_seconds(lap["Sector1Time"]),
         sector2=_seconds(lap["Sector2Time"]),
         sector3=_seconds(lap["Sector3Time"]),
+    )
+
+
+def lap_summary(lap: Lap) -> LapSummary:
+    """Extract headline lap facts (time, tyre, speed trap), tolerating gaps."""
+
+    def _float(value: object) -> float | None:
+        number = pd.to_numeric(value, errors="coerce")
+        return None if pd.isna(number) else float(number)
+
+    def _int(value: object) -> int | None:
+        number = _float(value)
+        return None if number is None else int(number)
+
+    def _bool(value: object) -> bool | None:
+        return None if pd.isna(value) else bool(value)
+
+    def _str(value: object) -> str | None:
+        return None if pd.isna(value) else str(value)
+
+    lap_time = pd.to_timedelta(lap.get("LapTime")).total_seconds()
+    return LapSummary(
+        lap_time=None if pd.isna(lap_time) else float(lap_time),
+        compound=_str(lap.get("Compound")),
+        tyre_life=_int(lap.get("TyreLife")),
+        fresh_tyre=_bool(lap.get("FreshTyre")),
+        stint=_int(lap.get("Stint")),
+        speed_trap=_float(lap.get("SpeedST")),
+        is_personal_best=_bool(lap.get("IsPersonalBest")),
     )

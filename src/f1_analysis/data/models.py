@@ -24,6 +24,19 @@ class DriverRef:
 
 
 @dataclass(frozen=True, slots=True)
+class LapSummary:
+    """Headline facts about a single lap, for the telemetry lap panel."""
+
+    lap_time: float | None  # seconds
+    compound: str | None  # e.g. "SOFT", "MEDIUM", "HARD", "INTERMEDIATE", "WET"
+    tyre_life: int | None  # laps on this set
+    fresh_tyre: bool | None
+    stint: int | None
+    speed_trap: float | None  # SpeedST, km/h
+    is_personal_best: bool | None
+
+
+@dataclass(frozen=True, slots=True)
 class LapSectors:
     """Sector times for a single lap, in seconds (``None`` when unavailable)."""
 
