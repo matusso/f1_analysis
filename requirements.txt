@@ -161,7 +161,7 @@ pydantic-settings==2.14.2
     # via f1-analysis
 pydeck==0.9.3
     # via streamlit
-pyjwt==2.13.0
+pyjwt==2.15.0
     # via fastf1
 pyparsing==3.3.2
     # via matplotlib
